@@ -1,12 +1,11 @@
 "use client";
 import { FileUpload } from "../ui/file-upload";
 import { useState } from "react";
-import { saveAs } from "file-saver";
 import { jsPDF } from "jspdf";
 
 export function Transform() {
   const [file, setFile] = useState<File | null>(null);
-  const [convertType, setConvertType] = useState<string>("pdf");
+  const [convertType, setConvertType] = useState<string>("text-to-pdf");
 
   const handleFileChange = (files: File[]) => {
     if (files.length > 0) setFile(files[0]);
@@ -17,13 +16,28 @@ export function Transform() {
 
     const reader = new FileReader();
 
-    if (convertType === "pdf") {
+    if (convertType === "text-to-pdf") {
       reader.onload = () => {
         const doc = new jsPDF();
         doc.text(reader.result as string, 10, 10);
         doc.save(`${file.name.split(".")[0]}.pdf`);
       };
       reader.readAsText(file);
+    }
+
+    if (convertType === "image-to-pdf") {
+      reader.onload = () => {
+        const doc = new jsPDF({
+          orientation: "portrait",
+          unit: "px",
+          format: [500, 700],
+        });
+
+        doc.addImage(reader.result as string, "JPEG", 0, 0, 500, 700);
+
+        doc.save(`${file.name.split(".")[0]}.pdf`);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -40,7 +54,8 @@ export function Transform() {
             value={convertType}
             onChange={(e) => setConvertType(e.target.value)}
           >
-            <option value="pdf">Texto → PDF</option>
+            <option value="text-to-pdf">Texto → PDF</option>
+            <option value="image-to-pdf">Imagem → PDF</option>
           </select>
 
           <button
