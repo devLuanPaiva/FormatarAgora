@@ -80,6 +80,31 @@ export function Transform() {
         .then(({ data: { text } }) => setResult(text))
         .catch((err) => setResult(`Erro: ${err.message}`));
     }
+    if (convertType === "pdf-to-jpeg") {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const imageUrls: string[] = [];
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: 2 });
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({ canvasContext: context!, viewport }).promise;
+        const imageUrl = canvas.toDataURL("image/jpeg", 1.0);
+
+        imageUrls.push(imageUrl);
+      }
+      const html = imageUrls
+        .map((src, i) => `<p>Página ${i + 1}</p><img src="${src}" style="width:100%;margin-bottom:20px;" />`)
+        .join("");
+
+      setResult(html);
+    }
   };
 
   return (
@@ -91,7 +116,7 @@ export function Transform() {
       {file && (
         <>
           <select
-            className="border px-4 py-2 rounded-md"
+            className="border px-4 py-2 rounded-md "
             value={convertType}
             onChange={(e) => setConvertType(e.target.value)}
           >
@@ -100,6 +125,7 @@ export function Transform() {
             <option value="pdf-to-text">PDF → Texto</option>
             <option value="image-to-base64">Imagem → Base64</option>
             <option value="image-to-text">Imagem → Texto (OCR)</option>
+            <option value="pdf-to-jpeg">PDF → JPEG</option>
           </select>
 
           <button
