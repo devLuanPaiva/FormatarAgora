@@ -152,6 +152,32 @@ export function useTransform({
             const blob = await Packer.toBlob(doc)
             saveAs(blob, `${file.name.split(".")[0]}.docx`)
         }
+        if (convertType === "image-to-docx") {
+            const imageData = await file.arrayBuffer();
+            const blob = new Blob([imageData], { type: file.type });
+            try {
+                const { data: { text } } = await Tesseract.recognize(blob, "eng");
+
+                const doc = new Document({
+                    sections: [
+                        {
+                            children: [
+                                new Paragraph({
+                                    children: [new TextRun(text)],
+                                }),
+                            ],
+                        },
+                    ],
+                });
+                const docBlob = await Packer.toBlob(doc);
+                saveAs(docBlob, `${file.name.split(".")[0]}_ocr.docx`);
+            } catch (err: any) {
+                const errorBlob = new Blob([`Erro: ${err.message}`], {
+                    type: "text/plain",
+                });
+                saveAs(errorBlob, "ocr_error.txt");
+            }
+        }
     };
 
     return { handleFileChange, handleConvert };

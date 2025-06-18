@@ -32,6 +32,7 @@ export function Transform() {
             <option value="pdf-to-docx">PDF → DOCX</option>
             <option value="pdf-to-text">PDF → Texto</option>
             <option value="image-to-pdf">Imagem → PDF</option>
+            <option value="image-to-docx">Imagem → DOCX</option>
             <option value="image-to-base64">Imagem → Base64</option>
             <option value="image-to-text">Imagem → Texto (OCR)</option>
             <option value="text-to-pdf">Texto → PDF</option>
