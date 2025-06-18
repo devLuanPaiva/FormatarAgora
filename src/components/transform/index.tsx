@@ -36,6 +36,7 @@ export function Transform() {
             <option value="image-to-base64">Imagem → Base64</option>
             <option value="image-to-text">Imagem → Texto (OCR)</option>
             <option value="text-to-pdf">Texto → PDF</option>
+            <option value="text-to-docx">Texto → DOCX</option>
           </select>
 
           <button

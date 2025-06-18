@@ -178,6 +178,24 @@ export function useTransform({
                 saveAs(errorBlob, "ocr_error.txt");
             }
         }
+        if (convertType === "text-to-docx") {
+            reader.onload = async () => {
+                const text = reader.result as string;
+
+                const doc = new Document({
+                    sections: [
+                        {
+                            children: text
+                                .split("\n")
+                                .map((line) => new Paragraph({ children: [new TextRun(line)] })),
+                        },
+                    ],
+                })
+                const docBlob = await Packer.toBlob(doc);
+                saveAs(docBlob, `${file.name.split(".")[0]}.docx`);
+            }
+            reader.readAsText(file);
+        }
     };
 
     return { handleFileChange, handleConvert };
