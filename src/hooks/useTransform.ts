@@ -1,7 +1,9 @@
-'use client'
+'use client';
+import JSZip from "jszip";
 import { jsPDF } from "jspdf";
-import * as pdfjsLib from "pdfjs-dist";
+import { saveAs } from "file-saver";
 import Tesseract from "tesseract.js";
+import * as pdfjsLib from "pdfjs-dist";
 import { TextItem } from "pdfjs-dist/types/src/display/api";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `/js/pdf.worker.mjs`;
@@ -14,7 +16,11 @@ interface UTransformProps {
     result: string;
     setResult: React.Dispatch<React.SetStateAction<string>>;
 }
-export function useTransform({ file, setFile, convertType, setConvertType, result, setResult }: Readonly<UTransformProps>) {
+
+export function useTransform({
+    file, setFile, convertType, setConvertType, result, setResult
+}: Readonly<UTransformProps>) {
+
     const handleFileChange = (files: File[]) => {
         if (files.length > 0) {
             setFile(files[0]);
@@ -63,13 +69,15 @@ export function useTransform({ file, setFile, convertType, setConvertType, resul
                 text += `\n${pageText}`;
             }
 
-            setResult(text);
+            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            saveAs(blob, `${file.name.split(".")[0]}.txt`);
         }
 
         if (convertType === "image-to-base64") {
             reader.onload = () => {
                 const base64 = reader.result as string;
-                setResult(base64);
+                const blob = new Blob([base64], { type: "text/plain;charset=utf-8" });
+                saveAs(blob, `${file.name.split(".")[0]}_base64.txt`);
             };
             reader.readAsDataURL(file);
         }
@@ -79,13 +87,21 @@ export function useTransform({ file, setFile, convertType, setConvertType, resul
             const blob = new Blob([imageData], { type: file.type });
 
             Tesseract.recognize(blob, "eng")
-                .then(({ data: { text } }) => setResult(text))
-                .catch((err) => setResult(`Erro: ${err.message}`));
+                .then(({ data: { text } }) => {
+                    const textBlob = new Blob([text], { type: "text/plain;charset=utf-8" });
+                    saveAs(textBlob, `${file.name.split(".")[0]}_ocr.txt`);
+                })
+                .catch((err) => {
+                    const errorBlob = new Blob([`Erro: ${err.message}`], { type: "text/plain" });
+                    saveAs(errorBlob, "ocr_error.txt");
+                });
         }
+
         if (convertType === "pdf-to-jpeg") {
             const arrayBuffer = await file.arrayBuffer();
             const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            const imageUrls: string[] = [];
+
+            const zip = new JSZip();
 
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
@@ -99,18 +115,23 @@ export function useTransform({ file, setFile, convertType, setConvertType, resul
                 await page.render({ canvasContext: context!, viewport }).promise;
                 const imageUrl = canvas.toDataURL("image/jpeg", 1.0);
 
-                imageUrls.push(imageUrl);
-            }
-            const html = imageUrls
-                .map(
-                    (src, i) =>
-                        `<p>Página ${i + 1
-                        }</p><img src="${src}" style="width:100%;margin-bottom:20px;" />`
-                )
-                .join("");
+                const byteString = atob(imageUrl.split(",")[1]);
+                const mimeString = imageUrl.split(",")[0].split(":")[1].split(";")[0];
 
-            setResult(html);
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let j = 0; j < byteString.length; j++) {
+                    ia[j] = byteString.charCodeAt(j);
+                }
+
+                const blob = new Blob([ab], { type: mimeString });
+                zip.file(`pagina_${i}.jpeg`, blob);
+            }
+
+            const content = await zip.generateAsync({ type: "blob" });
+            saveAs(content, `${file.name.split(".")[0]}_imagens.zip`);
         }
     };
+
     return { handleFileChange, handleConvert };
 }
