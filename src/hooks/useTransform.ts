@@ -4,6 +4,7 @@ import { jsPDF } from "jspdf";
 import { saveAs } from "file-saver";
 import Tesseract from "tesseract.js";
 import * as pdfjsLib from "pdfjs-dist";
+import { Document, Packer, Paragraph, TextRun } from "docx";
 import { TextItem } from "pdfjs-dist/types/src/display/api";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `/js/pdf.worker.mjs`;
@@ -130,6 +131,26 @@ export function useTransform({
 
             const content = await zip.generateAsync({ type: "blob" });
             saveAs(content, `${file.name.split(".")[0]}_imagens.zip`);
+        }
+
+        if (convertType === "pdf-to-docx") {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+            const paragraphs: Paragraph[] = [];
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                const pageText = (content.items as TextItem[])
+                    .map((item) => item.str)
+                    .join(" ");
+
+                paragraphs.push(new Paragraph({ children: [new TextRun({ text: pageText })] }));
+            }
+            const doc = new Document({ sections: [{ children: paragraphs }] })
+            const blob = await Packer.toBlob(doc)
+            saveAs(blob, `${file.name.split(".")[0]}.docx`)
         }
     };
 
