@@ -42,14 +42,6 @@ export function Transform() {
           >
             Converter
           </button>
-
-          {result && (
-            <textarea
-              readOnly
-              value={result}
-              className="mt-4 w-full h-64 border rounded p-2"
-            />
-          )}
         </>
       )}
     </section>
