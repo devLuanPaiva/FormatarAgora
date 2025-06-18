@@ -1,117 +1,20 @@
 "use client";
-import { FileUpload } from "../ui/file-upload";
 import { useState } from "react";
-import { jsPDF } from "jspdf";
-import * as pdfjsLib from "pdfjs-dist";
-import Tesseract from "tesseract.js";
-import { TextItem } from "pdfjs-dist/types/src/display/api";
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = `/js/pdf.worker.mjs`;
+import { FileUpload } from "../ui/file-upload";
+import { useTransform } from "@/hooks/useTransform";
 
 export function Transform() {
   const [file, setFile] = useState<File | null>(null);
   const [convertType, setConvertType] = useState<string>("text-to-pdf");
   const [result, setResult] = useState<string>("");
-
-  const handleFileChange = (files: File[]) => {
-    if (files.length > 0) {
-      setFile(files[0]);
-      setResult("");
-    }
-  };
-
-  const handleConvert = async () => {
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    if (convertType === "text-to-pdf") {
-      reader.onload = () => {
-        const doc = new jsPDF();
-        doc.text(reader.result as string, 10, 10);
-        doc.save(`${file.name.split(".")[0]}.pdf`);
-      };
-      reader.readAsText(file);
-    }
-
-    if (convertType === "image-to-pdf") {
-      reader.onload = () => {
-        const doc = new jsPDF({
-          orientation: "portrait",
-          unit: "px",
-          format: [500, 700],
-        });
-        doc.addImage(reader.result as string, "JPEG", 0, 0, 500, 700);
-        doc.save(`${file.name.split(".")[0]}.pdf`);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    if (convertType === "pdf-to-text") {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      let text = "";
-
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const content = await page.getTextContent();
-        const pageText = (content.items as TextItem[])
-          .map((item) => item.str)
-          .join(" ");
-        text += `\n${pageText}`;
-      }
-
-      setResult(text);
-    }
-
-    if (convertType === "image-to-base64") {
-      reader.onload = () => {
-        const base64 = reader.result as string;
-        setResult(base64);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    if (convertType === "image-to-text") {
-      const imageData = await file.arrayBuffer();
-      const blob = new Blob([imageData], { type: file.type });
-
-      Tesseract.recognize(blob, "eng")
-        .then(({ data: { text } }) => setResult(text))
-        .catch((err) => setResult(`Erro: ${err.message}`));
-    }
-    if (convertType === "pdf-to-jpeg") {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      const imageUrls: string[] = [];
-
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 2 });
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-
-        await page.render({ canvasContext: context!, viewport }).promise;
-        const imageUrl = canvas.toDataURL("image/jpeg", 1.0);
-
-        imageUrls.push(imageUrl);
-      }
-      const html = imageUrls
-        .map(
-          (src, i) =>
-            `<p>Página ${
-              i + 1
-            }</p><img src="${src}" style="width:100%;margin-bottom:20px;" />`
-        )
-        .join("");
-
-      setResult(html);
-    }
-  };
-
+  const { handleConvert, handleFileChange } = useTransform({
+    file,
+    setFile,
+    convertType,
+    setConvertType,
+    result,
+    setResult,
+  });
   return (
     <section className="max-w-screen flex flex-col gap-6 items-center justify-center p-6">
       <div className="w-full md:w-[70%]">
