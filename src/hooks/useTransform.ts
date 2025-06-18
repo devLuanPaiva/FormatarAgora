@@ -196,6 +196,19 @@ export function useTransform({
             }
             reader.readAsText(file);
         }
+        if (convertType === "docx-to-pdf") {
+            const arrayBuffer = await file.arrayBuffer();
+
+            const mammoth = await import("mammoth");
+            const { value: html } = await mammoth.convertToHtml({ arrayBuffer });
+
+            const textContent = html.replace(/<[^>]+>/g, "");
+
+            const doc = new jsPDF();
+            const lines = doc.splitTextToSize(textContent, 180);
+            doc.text(lines, 10, 10);
+            doc.save(`${file.name.split(".")[0]}.pdf`);
+        }
     };
 
     return { handleFileChange, handleConvert };

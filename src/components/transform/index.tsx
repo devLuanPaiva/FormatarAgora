@@ -37,6 +37,7 @@ export function Transform() {
             <option value="image-to-text">Imagem → Texto (OCR)</option>
             <option value="text-to-pdf">Texto → PDF</option>
             <option value="text-to-docx">Texto → DOCX</option>
+            <option value="docx-to-pdf">DOCX → PDF</option>
           </select>
 
           <button
