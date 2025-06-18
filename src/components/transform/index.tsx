@@ -6,7 +6,7 @@ import * as pdfjsLib from "pdfjs-dist";
 import Tesseract from "tesseract.js";
 import { TextItem } from "pdfjs-dist/types/src/display/api";
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = `/js/pdf.worker.mjs`;
 
 export function Transform() {
   const [file, setFile] = useState<File | null>(null);
@@ -100,7 +100,12 @@ export function Transform() {
         imageUrls.push(imageUrl);
       }
       const html = imageUrls
-        .map((src, i) => `<p>Página ${i + 1}</p><img src="${src}" style="width:100%;margin-bottom:20px;" />`)
+        .map(
+          (src, i) =>
+            `<p>Página ${
+              i + 1
+            }</p><img src="${src}" style="width:100%;margin-bottom:20px;" />`
+        )
         .join("");
 
       setResult(html);
