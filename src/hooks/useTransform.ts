@@ -154,8 +154,20 @@ export function useTransform({
         }
         if (convertType === "image-to-docx") {
             const imageData = await file.arrayBuffer();
+            const blob = new Blob([imageData], { type: file.type });
 
             try {
+                // Obter dimensões originais da imagem
+                const img = new Image();
+                const imgUrl = URL.createObjectURL(blob);
+
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = imgUrl;
+                });
+
+                // Criar documento com a imagem em tamanho original
                 const doc = new Document({
                     sections: [
                         {
@@ -166,8 +178,8 @@ export function useTransform({
                                         new ImageRun({
                                             data: new Uint8Array(imageData),
                                             transformation: {
-                                                width: 500,
-                                                height: 500,
+                                                width: img.width,
+                                                height: img.height,
                                             },
                                         }),
                                     ],
@@ -179,6 +191,7 @@ export function useTransform({
 
                 const docBlob = await Packer.toBlob(doc);
                 saveAs(docBlob, `${file.name.split(".")[0]}.docx`);
+                URL.revokeObjectURL(imgUrl);
             } catch (err: any) {
                 const errorBlob = new Blob([`Erro: ${err.message}`], {
                     type: "text/plain",
