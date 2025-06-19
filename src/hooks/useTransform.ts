@@ -165,7 +165,6 @@ export function useTransform({
                     img.src = imgUrl;
                 });
 
-
                 const doc = new Document({
                     sections: [
                         {
@@ -179,7 +178,9 @@ export function useTransform({
                                                 width: img.width,
                                                 height: img.height,
                                             },
+                                            type: file.type.includes('png') ? 'png' : 'jpg',
                                         }),
+
                                     ],
                                 }),
                             ],
