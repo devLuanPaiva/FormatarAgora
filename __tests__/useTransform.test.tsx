@@ -1,11 +1,28 @@
 import "@testing-library/jest-dom";
-
-import { renderHook } from "@testing-library/react";
+import { jsPDF } from "jspdf";
+import { renderHook, act } from "@testing-library/react";
+import { mockFile, mockImageFile } from "../__mocks__";
 import { useTransform } from "../src/hooks/useTransform";
-import { mockFile } from "../__mocks__";
 
 jest.mock("jszip");
-jest.mock("jspdf");
+jest.mock("jspdf", () => {
+  const mockAddImage = jest.fn();
+  const mockSave = jest.fn();
+
+  const jsPDFMock = jest.fn().mockImplementation((options) => {
+    return {
+      addImage: mockAddImage,
+      save: mockSave,
+      options: options,
+    };
+  });
+
+  return {
+    __esModule: true,
+    jsPDF: jsPDFMock,
+  };
+});
+
 jest.mock("file-saver");
 jest.mock("tesseract.js");
 jest.mock("pdfjs-dist");
@@ -56,5 +73,45 @@ describe("useTransform", () => {
     result.current.handleFileChange([testFile]);
 
     expect(mockSetFile).toHaveBeenCalledWith(testFile);
+  });
+  it("should convert image to PDF", async () => {
+    const testFile = mockImageFile("test.jpg", "image/jpeg");
+    const mockReadAsDataURL = jest.fn();
+    const mockFileReader = {
+      readAsDataURL: mockReadAsDataURL,
+      onload: null as
+        | null
+        | ((this: FileReader, ev: ProgressEvent<FileReader>) => any),
+      result: "data:image/jpeg;base64,mockdata",
+    };
+
+    global.FileReader = jest.fn(() => mockFileReader as unknown as FileReader);
+
+    const { result } = renderHook(() =>
+      useTransform({
+        file: testFile,
+        setFile: jest.fn(),
+        convertType: "image-to-pdf",
+      })
+    );
+
+    await act(async () => {
+      const convertPromise = result.current.handleConvert();
+
+      if (mockFileReader.onload) {
+        mockFileReader.onload.call(
+          mockFileReader as unknown as FileReader,
+          new ProgressEvent("load")
+        );
+      }
+
+      await convertPromise;
+    });
+
+    expect(jsPDF).toHaveBeenCalledWith({
+      orientation: "portrait",
+      unit: "px",
+      format: [500, 700],
+    });
   });
 });
