@@ -9,14 +9,10 @@ import { ArrowRight } from "lucide-react";
 export function Transform() {
   const [file, setFile] = useState<File | null>(null);
   const [convertType, setConvertType] = useState<string>("text-to-pdf");
-  const [result, setResult] = useState<string>("");
   const { handleConvert, handleFileChange } = useTransform({
     file,
     setFile,
     convertType,
-    setConvertType,
-    result,
-    setResult,
   });
 
   const fileType = file?.type ?? "";

@@ -13,19 +13,17 @@ interface UTransformProps {
     file: File | null;
     setFile: React.Dispatch<React.SetStateAction<File | null>>;
     convertType: string;
-    setConvertType: React.Dispatch<React.SetStateAction<string>>;
-    result: string;
-    setResult: React.Dispatch<React.SetStateAction<string>>;
+
 }
 
 export function useTransform({
-    file, setFile, convertType, setConvertType, result, setResult
+    file, setFile, convertType
 }: Readonly<UTransformProps>) {
 
     const handleFileChange = (files: File[]) => {
         if (files.length > 0) {
             setFile(files[0]);
-            setResult("");
+
         }
     };
 
@@ -157,7 +155,7 @@ export function useTransform({
             const blob = new Blob([imageData], { type: file.type });
 
             try {
-                // Obter dimensões originais da imagem
+
                 const img = new Image();
                 const imgUrl = URL.createObjectURL(blob);
 
@@ -167,7 +165,7 @@ export function useTransform({
                     img.src = imgUrl;
                 });
 
-                // Criar documento com a imagem em tamanho original
+
                 const doc = new Document({
                     sections: [
                         {
