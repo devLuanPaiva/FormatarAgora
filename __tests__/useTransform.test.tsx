@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 
 import { renderHook } from "@testing-library/react";
 import { useTransform } from "../src/hooks/useTransform";
+import { mockFile } from "../__mocks__";
 
 jest.mock("jszip");
 jest.mock("jspdf");
@@ -27,14 +28,6 @@ jest.mock("pdfjs-dist", () => ({
 }));
 
 describe("useTransform", () => {
-  const mockFile = (name: string, type: string, content: string): File => {
-    const blob = new Blob([content], { type });
-    return new File([blob], name, { type });
-  };
-  const mockImageFile = (name: string, type: string): File => {
-    const blob = new Blob(["fake image data"], { type });
-    return new File([blob], name, { type });
-  };
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -48,5 +41,20 @@ describe("useTransform", () => {
     );
     expect(result.current).toHaveProperty("handleFileChange");
     expect(result.current).toHaveProperty("handleConvert");
+  });
+  it("should set file when files are provided", () => {
+    const mockSetFile = jest.fn();
+    const { result } = renderHook(() =>
+      useTransform({
+        file: null,
+        setFile: mockSetFile,
+        convertType: "text-to-pdf",
+      })
+    );
+
+    const testFile = mockFile("test.txt", "text/plain", "Hello World");
+    result.current.handleFileChange([testFile]);
+
+    expect(mockSetFile).toHaveBeenCalledWith(testFile);
   });
 });
