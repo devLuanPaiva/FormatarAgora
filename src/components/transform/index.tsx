@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { FileUpload } from "../ui/file-upload";
 import { useTransform } from "@/hooks/useTransform";
+import { getOptionsForType } from "@/functions";
 
 export function Transform() {
   const [file, setFile] = useState<File | null>(null);
@@ -15,6 +16,9 @@ export function Transform() {
     result,
     setResult,
   });
+  const fileType = file?.type ?? "";
+  const availableOptions = getOptionsForType(fileType);
+
   return (
     <section className="max-w-screen flex flex-col gap-6 items-center justify-center p-6">
       <div className="w-full md:w-[70%]">
@@ -24,20 +28,19 @@ export function Transform() {
       {file && (
         <>
           <select
-            className="border px-4 py-2 rounded-md "
+            className="border px-4 py-2 rounded-md"
             value={convertType}
             onChange={(e) => setConvertType(e.target.value)}
           >
-            <option value="pdf-to-jpeg">PDF → JPEG</option>
-            <option value="pdf-to-docx">PDF → DOCX</option>
-            <option value="pdf-to-text">PDF → Texto</option>
-            <option value="image-to-pdf">Imagem → PDF</option>
-            <option value="image-to-docx">Imagem → DOCX</option>
-            <option value="image-to-base64">Imagem → Base64</option>
-            <option value="image-to-text">Imagem → Texto (OCR)</option>
-            <option value="text-to-pdf">Texto → PDF</option>
-            <option value="text-to-docx">Texto → DOCX</option>
-            <option value="docx-to-pdf">DOCX → PDF</option>
+            {availableOptions.length > 0 ? (
+              availableOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))
+            ) : (
+              <option disabled>Tipo de arquivo não suportado</option>
+            )}
           </select>
 
           <button
