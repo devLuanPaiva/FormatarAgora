@@ -4,7 +4,7 @@ import { jsPDF } from "jspdf";
 import { saveAs } from "file-saver";
 import Tesseract from "tesseract.js";
 import * as pdfjsLib from "pdfjs-dist";
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import { Document, ImageRun, Packer, Paragraph, TextRun } from "docx";
 import { TextItem } from "pdfjs-dist/types/src/display/api";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `/js/pdf.worker.mjs`;
@@ -154,28 +154,36 @@ export function useTransform({
         }
         if (convertType === "image-to-docx") {
             const imageData = await file.arrayBuffer();
-            const blob = new Blob([imageData], { type: file.type });
-            try {
-                const { data: { text } } = await Tesseract.recognize(blob, "eng");
 
+            try {
                 const doc = new Document({
                     sections: [
                         {
+                            properties: {},
                             children: [
                                 new Paragraph({
-                                    children: [new TextRun(text)],
+                                    children: [
+                                        new ImageRun({
+                                            data: new Uint8Array(imageData),
+                                            transformation: {
+                                                width: 500,
+                                                height: 500,
+                                            },
+                                        }),
+                                    ],
                                 }),
                             ],
                         },
                     ],
                 });
+
                 const docBlob = await Packer.toBlob(doc);
-                saveAs(docBlob, `${file.name.split(".")[0]}_ocr.docx`);
+                saveAs(docBlob, `${file.name.split(".")[0]}.docx`);
             } catch (err: any) {
                 const errorBlob = new Blob([`Erro: ${err.message}`], {
                     type: "text/plain",
                 });
-                saveAs(errorBlob, "ocr_error.txt");
+                saveAs(errorBlob, "image_to_docx_error.txt");
             }
         }
         if (convertType === "text-to-docx") {
