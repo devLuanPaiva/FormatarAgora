@@ -190,8 +190,9 @@ export function useTransform({
                 const docBlob = await Packer.toBlob(doc);
                 saveAs(docBlob, `${file.name.split(".")[0]}.docx`);
                 URL.revokeObjectURL(imgUrl);
-            } catch (err: any) {
-                const errorBlob = new Blob([`Erro: ${err.message}`], {
+            } catch (err: unknown) {
+                const errorMessage = err instanceof Error ? err.message : 'Ocorreu um erro desconhecido';
+                const errorBlob = new Blob([`Erro: ${errorMessage}`], {
                     type: "text/plain",
                 });
                 saveAs(errorBlob, "image_to_docx_error.txt");
