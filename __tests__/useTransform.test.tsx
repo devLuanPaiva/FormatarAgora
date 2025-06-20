@@ -187,5 +187,37 @@ describe("useTransform", () => {
     expect(mockGetDocument).toHaveBeenCalledWith({ data: expect.any(ArrayBuffer) });
     expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), "test.txt");
   });
+  it("should convert image to base64", async () => {
+    const testFile = mockImageFile("test.jpg", "image/jpeg");
+
+    const mockReadAsDataURL = jest.fn();
+    const mockFileReader = {
+      readAsDataURL: mockReadAsDataURL,
+      onload: null as FileReader["onload"],
+      result: "data:image/jpeg;base64,mockdata",
+    };
+
+    global.FileReader = jest.fn(() => mockFileReader as unknown as FileReader);
+
+    const { result } = renderHook(() => useTransform({
+      file: testFile,
+      setFile: jest.fn(),
+      convertType: "image-to-base64",
+    }));
+
+    await act(async () => {
+      const convertPromise = result.current.handleConvert();
+      if (mockFileReader.onload) {
+        mockFileReader.onload.call(
+          mockFileReader as unknown as FileReader,
+          new ProgressEvent("load")
+        );
+      }
+      await convertPromise;
+    });
+
+    expect(mockReadAsDataURL).toHaveBeenCalledWith(testFile);
+    expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), "test_base64.txt");
+  });
 
 });
