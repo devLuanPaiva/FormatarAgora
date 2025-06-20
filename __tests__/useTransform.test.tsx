@@ -7,6 +7,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { mockFile, mockImageFile } from "../__mocks__";
 import { renderHook, act } from "@testing-library/react";
 import { useTransform } from "../src/hooks/useTransform";
+import { Packer } from "docx";
 
 
 jest.mock("jszip");
@@ -290,4 +291,40 @@ describe("useTransform", () => {
     expect(JSZip).toHaveBeenCalled();
     expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), "test_imagens.zip");
   });
+  it("should convert PDF to DOCX", async () => {
+    const testFile = mockFile("test.pdf", "application/pdf", "PDF content");
+
+    // Corrige o erro adicionando o mock da função arrayBuffer
+    testFile.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(0));
+
+    const mockPdf = {
+      numPages: 1,
+      getPage: jest.fn().mockResolvedValue({
+        getTextContent: jest.fn().mockResolvedValue({
+          items: [{ str: "PDF content" }],
+        }),
+      }),
+    };
+
+    (pdfjsLib.getDocument as jest.Mock).mockReturnValue({
+      promise: Promise.resolve(mockPdf),
+    });
+
+    const mockToBlob = jest.fn().mockResolvedValue(new Blob(["docx content"], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" }));
+    (Packer.toBlob as jest.Mock) = mockToBlob;
+
+    const { result } = renderHook(() => useTransform({
+      file: testFile,
+      setFile: jest.fn(),
+      convertType: "pdf-to-docx",
+    }));
+
+    await act(async () => {
+      await result.current.handleConvert();
+    });
+
+    expect(Packer.toBlob).toHaveBeenCalled();
+    expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), "test.docx");
+  });
+
 });
