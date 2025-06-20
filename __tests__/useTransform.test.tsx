@@ -1,11 +1,12 @@
+import JSZip from "jszip";
 import { jsPDF } from "jspdf";
 import "@testing-library/jest-dom";
+import { saveAs } from "file-saver";
+import Tesseract from "tesseract.js";
 import * as pdfjsLib from 'pdfjs-dist';
 import { mockFile, mockImageFile } from "../__mocks__";
 import { renderHook, act } from "@testing-library/react";
 import { useTransform } from "../src/hooks/useTransform";
-import { saveAs } from "file-saver";
-import Tesseract from "tesseract.js";
 
 
 jest.mock("jszip");
@@ -249,5 +250,44 @@ describe("useTransform", () => {
     expect(mockRecognize).toHaveBeenCalled();
     expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), "test_ocr.txt");
   });
+  it("should convert PDF pages to images", async () => {
+    const testFile = mockFile("test.pdf", "application/pdf", "PDF content");
+    testFile.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(0));
 
+    const mockPage = {
+      getViewport: jest.fn().mockReturnValue({ width: 100, height: 100 }),
+      render: jest.fn().mockResolvedValue(undefined),
+    };
+
+    const mockPdf = {
+      numPages: 1,
+      getPage: jest.fn().mockResolvedValue(mockPage),
+    };
+
+    (pdfjsLib.getDocument as jest.Mock).mockReturnValue({
+      promise: Promise.resolve(mockPdf),
+    });
+
+    const mockJSZipInstance = {
+      file: jest.fn(),
+      generateAsync: jest.fn().mockResolvedValue(new Blob(["zip content"], { type: "application/zip" })),
+    };
+
+    (JSZip as unknown as jest.Mock).mockImplementation(() => mockJSZipInstance);
+
+    const { result } = renderHook(() =>
+      useTransform({
+        file: testFile,
+        setFile: jest.fn(),
+        convertType: "pdf-to-jpeg", // 👈 necessário!
+      })
+    );
+
+    await act(async () => {
+      await result.current.handleConvert();
+    });
+
+    expect(JSZip).toHaveBeenCalled();
+    expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), "test_imagens.zip");
+  });
 });
