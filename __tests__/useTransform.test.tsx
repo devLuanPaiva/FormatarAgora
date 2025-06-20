@@ -5,6 +5,7 @@ import { mockFile, mockImageFile } from "../__mocks__";
 import { renderHook, act } from "@testing-library/react";
 import { useTransform } from "../src/hooks/useTransform";
 import { saveAs } from "file-saver";
+import Tesseract from "tesseract.js";
 
 
 jest.mock("jszip");
@@ -218,6 +219,35 @@ describe("useTransform", () => {
 
     expect(mockReadAsDataURL).toHaveBeenCalledWith(testFile);
     expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), "test_base64.txt");
+  });
+  it("should perform OCR on image", async () => {
+    const testFile = mockImageFile("test.jpg", "image/jpeg");
+
+    // Adiciona arrayBuffer mockado
+    testFile.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(8));
+
+    // Mock do Tesseract
+    const mockRecognize = Tesseract.recognize as jest.Mock;
+    mockRecognize.mockResolvedValue({
+      data: {
+        text: "Recognized text from image",
+      },
+    });
+
+    const { result } = renderHook(() =>
+      useTransform({
+        file: testFile,
+        setFile: jest.fn(),
+        convertType: "image-to-text",
+      })
+    );
+
+    await act(async () => {
+      await result.current.handleConvert();
+    });
+
+    expect(mockRecognize).toHaveBeenCalled();
+    expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), "test_ocr.txt");
   });
 
 });
