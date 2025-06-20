@@ -1,5 +1,6 @@
 import JSZip from "jszip";
 import { jsPDF } from "jspdf";
+import { Packer } from "docx";
 import "@testing-library/jest-dom";
 import { saveAs } from "file-saver";
 import Tesseract from "tesseract.js";
@@ -7,7 +8,6 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { mockFile, mockImageFile } from "../__mocks__";
 import { renderHook, act } from "@testing-library/react";
 import { useTransform } from "../src/hooks/useTransform";
-import { Packer } from "docx";
 
 
 jest.mock("jszip");
@@ -225,10 +225,8 @@ describe("useTransform", () => {
   it("should perform OCR on image", async () => {
     const testFile = mockImageFile("test.jpg", "image/jpeg");
 
-    // Adiciona arrayBuffer mockado
     testFile.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(8));
 
-    // Mock do Tesseract
     const mockRecognize = Tesseract.recognize as jest.Mock;
     mockRecognize.mockResolvedValue({
       data: {
@@ -280,7 +278,7 @@ describe("useTransform", () => {
       useTransform({
         file: testFile,
         setFile: jest.fn(),
-        convertType: "pdf-to-jpeg", // 👈 necessário!
+        convertType: "pdf-to-jpeg",
       })
     );
 
@@ -294,7 +292,6 @@ describe("useTransform", () => {
   it("should convert PDF to DOCX", async () => {
     const testFile = mockFile("test.pdf", "application/pdf", "PDF content");
 
-    // Corrige o erro adicionando o mock da função arrayBuffer
     testFile.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(0));
 
     const mockPdf = {
@@ -325,6 +322,43 @@ describe("useTransform", () => {
 
     expect(Packer.toBlob).toHaveBeenCalled();
     expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), "test.docx");
+  });
+  it('should convert text to DOCX', async () => {
+    const testFile = mockFile('test.txt', 'text/plain', 'Hello\nWorld');
+
+    const mockReadAsText = jest.fn();
+    const mockFileReader = {
+      readAsText: mockReadAsText,
+      onload: null as FileReader["onload"],
+      result: 'Hello\nWorld',
+    };
+
+    global.FileReader = jest.fn(() => mockFileReader as unknown as FileReader);
+
+    const { result } = renderHook(() =>
+      useTransform({
+        file: testFile,
+        setFile: jest.fn(),
+        convertType: 'text-to-docx',
+      })
+    );
+
+    await act(async () => {
+      const convertPromise = result.current.handleConvert();
+
+      if (mockFileReader.onload) {
+        mockFileReader.onload.call(
+          mockFileReader as unknown as FileReader,
+          new ProgressEvent("load")
+        );
+      }
+
+      await convertPromise;
+    });
+
+    expect(mockReadAsText).toHaveBeenCalledWith(testFile);
+    expect(Packer.toBlob).toHaveBeenCalled();
+    expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), 'test.docx');
   });
 
 });
