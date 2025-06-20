@@ -1,22 +1,22 @@
 # Formatar agora
 
-<div data-badges style="display:flex; flex-wrap: wrap; gap:8px; justify-content: center; align-items: center;">
-  <img src="https://img.shields.io/badge/turborepo-%23000000.svg?style=for-the-badge&logo=turborepo&logoColor=white" alt="Turborepo" />
-  <img src="https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white" alt="Angular" />
-  <img src="https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS" />
-  <img src="https://img.shields.io/badge/react%20native-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React Native" />
-  <img src="https://img.shields.io/badge/prisma-%232D3748.svg?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma" />
-  <img src="https://img.shields.io/badge/postgresql-%23336791.svg?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+<div align="center">
+  <img src="https://img.shields.io/badge/next.js-%23000000.svg?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React" />
   <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/jest-%23C21325.svg?style=for-the-badge&logo=jest&logoColor=white" alt="Jest" />
-  <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/gitflow-%23F05032.svg?style=for-the-badge&logo=git&logoColor=white" alt="GitFlow" />
-  <img src="https://img.shields.io/badge/karma-%23D04A36.svg?style=for-the-badge&logo=karma&logoColor=white" alt="Karma" />
-  <img src="https://img.shields.io/badge/cypress-%23172a3a.svg?style=for-the-badge&logo=cypress&logoColor=white" alt="Cypress" />
-  <img src="https://img.shields.io/badge/jasmine-%238A4182.svg?style=for-the-badge&logo=jasmine&logoColor=white" alt="Jasmine" />
-  <img src="https://img.shields.io/badge/html5-%23e34f26.svg?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
-  <img src="https://img.shields.io/badge/css3-%231572b6.svg?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3" />
+  <img src="https://img.shields.io/badge/framer%20motion-%23000000.svg?style=for-the-badge&logo=framer&logoColor=white" alt="Framer Motion" />
+  <img src="https://img.shields.io/badge/docx.js-%23007ACC.svg?style=for-the-badge&logo=microsoftword&logoColor=white" alt="docx" />
+  <img src="https://img.shields.io/badge/jsPDF-%23e34f26.svg?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="jsPDF" />
+  <img src="https://img.shields.io/badge/file%20saver-%23333.svg?style=for-the-badge&logo=floppy-disk&logoColor=white" alt="File Saver" />
+  <img src="https://img.shields.io/badge/react%20dropzone-%230099cc.svg?style=for-the-badge&logo=upload&logoColor=white" alt="React Dropzone" />
+  <img src="https://img.shields.io/badge/tesseract.js-%23333.svg?style=for-the-badge&logo=OCR&logoColor=white" alt="Tesseract.js" />
+  <img src="https://img.shields.io/badge/mammoth.js-%23666666.svg?style=for-the-badge&logo=wordpress&logoColor=white" alt="Mammoth.js" />
+  <img src="https://img.shields.io/badge/jszip-%230072B8.svg?style=for-the-badge&logo=zip&logoColor=white" alt="JSZip" />
+  <img src="https://img.shields.io/badge/pdfjs-%23FFB000.svg?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="pdfjs-dist" />
+  <img src="https://img.shields.io/badge/tabler%20icons-%23007ACC.svg?style=for-the-badge&logo=tabler&logoColor=white" alt="Tabler Icons" />
+  <img src="https://img.shields.io/badge/lucide%20icons-%231B1F23.svg?style=for-the-badge&logo=feather&logoColor=white" alt="Lucide React" />
 </div>
+
 
 ---
 
