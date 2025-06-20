@@ -3,16 +3,21 @@ import { jsPDF } from "jspdf";
 import { renderHook, act } from "@testing-library/react";
 import { mockFile, mockImageFile } from "../__mocks__";
 import { useTransform } from "../src/hooks/useTransform";
+import { saveAs } from "file-saver";
 
 jest.mock("jszip");
 jest.mock("jspdf", () => {
   const mockAddImage = jest.fn();
   const mockSave = jest.fn();
+  const mockText = jest.fn();
+  const mockSplitTextToSize = jest.fn((text) => [text]);
 
   const jsPDFMock = jest.fn().mockImplementation((options) => {
     return {
       addImage: mockAddImage,
       save: mockSave,
+      text: mockText,
+      splitTextToSize: mockSplitTextToSize,
       options: options,
     };
   });
@@ -22,6 +27,7 @@ jest.mock("jspdf", () => {
     jsPDF: jsPDFMock,
   };
 });
+
 
 jest.mock("file-saver");
 jest.mock("tesseract.js");
@@ -114,4 +120,40 @@ describe("useTransform", () => {
       format: [500, 700],
     });
   });
+  it("should convert text to PDF", async () => {
+    const testFile = mockFile("test.txt", "text/plain", "Hello World");
+
+    const mockReadAsText = jest.fn();
+    const mockFileReader = {
+      readAsText: mockReadAsText,
+      onload: null as FileReader["onload"],
+      result: "Hello World",
+    };
+
+    global.FileReader = jest.fn(() => mockFileReader as unknown as FileReader);
+
+    const { result } = renderHook(() =>
+      useTransform({
+        file: testFile,
+        setFile: jest.fn(),
+        convertType: "text-to-pdf",
+      })
+    );
+
+    await act(async () => {
+      const convertPromise = result.current.handleConvert();
+      if (mockFileReader.onload) {
+        mockFileReader.onload.call(
+          mockFileReader as unknown as FileReader,
+          new ProgressEvent("load")
+        );
+      }
+
+      await convertPromise;
+    });
+
+    expect(mockReadAsText).toHaveBeenCalledWith(testFile);
+    expect(jsPDF).toHaveBeenCalled();
+  });
+
 });
