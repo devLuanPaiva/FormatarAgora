@@ -1,9 +1,11 @@
-import "@testing-library/jest-dom";
 import { jsPDF } from "jspdf";
-import { renderHook, act } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import * as pdfjsLib from 'pdfjs-dist';
 import { mockFile, mockImageFile } from "../__mocks__";
+import { renderHook, act } from "@testing-library/react";
 import { useTransform } from "../src/hooks/useTransform";
 import { saveAs } from "file-saver";
+
 
 jest.mock("jszip");
 jest.mock("jspdf", () => {
@@ -154,6 +156,36 @@ describe("useTransform", () => {
 
     expect(mockReadAsText).toHaveBeenCalledWith(testFile);
     expect(jsPDF).toHaveBeenCalled();
+  });
+  it("should convert PDF to text", async () => {
+    const testFile = mockFile("test.pdf", "application/pdf", "PDF content");
+    testFile.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(0));
+
+    const mockGetDocument = (pdfjsLib.getDocument as jest.Mock).mockReturnValue({
+      promise: Promise.resolve({
+        numPages: 1,
+        getPage: jest.fn().mockResolvedValue({
+          getTextContent: jest.fn().mockResolvedValue({
+            items: [{ str: "PDF content" }],
+          }),
+        }),
+      }),
+    });
+
+    const { result } = renderHook(() =>
+      useTransform({
+        file: testFile,
+        setFile: jest.fn(),
+        convertType: "pdf-to-text",
+      })
+    );
+
+    await act(async () => {
+      await result.current.handleConvert();
+    });
+
+    expect(mockGetDocument).toHaveBeenCalledWith({ data: expect.any(ArrayBuffer) });
+    expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), "test.txt");
   });
 
 });
