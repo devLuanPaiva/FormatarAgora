@@ -20,7 +20,7 @@ export function Transform() {
 
   return (
     <section className="max-w-screen flex flex-col gap-6 items-center justify-center p-6">
-      <div className="w-full md:w-[70%]">
+      <div className="w-full md:w-[70%] flex items-center justify-center">
         <FileUpload onChange={handleFileChange} />
       </div>
 
@@ -36,9 +36,9 @@ export function Transform() {
                   <motion.button
                     key={option.value}
                     onClick={() => setConvertType(option.value)}
-                    className={`flex items-center text-black justify-between gap-4 p-4 rounded-2xl border shadow-md hover:shadow-lg transition-all ${
+                    className={`flex items-center text-purple-800 justify-between gap-4 p-4 rounded-lg cursor-pointer border shadow-md hover:shadow-lg  hover:bg-purple-500 hover:text-white transition-colors ${
                       convertType === option.value
-                        ? "bg-blue-600 text-white"
+                        ? "bg-purple-800 text-white"
                         : "bg-white"
                     }`}
                     whileHover={{ scale: 1.03 }}
@@ -68,7 +68,7 @@ export function Transform() {
           </div>
 
           <button
-            className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition-colors"
+            className="mt-4 bg-purple-800 text-white px-6 py-2 rounded-lg hover:bg-purple-500 transition-colors cursor-pointer"
             onClick={handleConvert}
           >
             Converter
