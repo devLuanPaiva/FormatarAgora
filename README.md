@@ -1,7 +1,7 @@
 # Formatar agora
 
 <div align="center">
-    <img src="https://www.traveladvisor.site/logoFull.png" width="350px">
+    <img src="https://formatar-agora.vercel.app/logoFull.png" width="350px">
 </div>
 
 <div align="center">
