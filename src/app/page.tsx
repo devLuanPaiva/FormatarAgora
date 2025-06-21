@@ -1,4 +1,5 @@
 "use client";
+import { Header } from "@/components/shared/Header";
 import dynamic from "next/dynamic";
 
 const Transform = dynamic(
@@ -9,7 +10,7 @@ const Transform = dynamic(
 export default function Home() {
   return (
     <main>
-      <h1>Formatar agora!</h1>
+      <Header />
       <Transform />
     </main>
   );
