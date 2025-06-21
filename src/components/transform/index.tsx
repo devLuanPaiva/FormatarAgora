@@ -25,8 +25,9 @@ export function Transform() {
       </div>
 
       {file && (
-        <section className="flex flex-col items-center w-full lg:w-1/2 xl:max-w-xl">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4 w-full">
+        <section className="flex flex-col items-center w-full lg:w-1/2 xl:max-w-[700px] gap-1.5">
+          <h3 className="self-start text-sm md:text-lg font-bold text-zinc-800">Selecione o tipo de conversão</h3>
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3 w-full ">
             {availableOptions.length > 0 ? (
               availableOptions.map((option) => {
                 const Icon1 = option.icons.icon1;
@@ -36,7 +37,7 @@ export function Transform() {
                   <motion.button
                     key={option.value}
                     onClick={() => setConvertType(option.value)}
-                    className={`flex items-center text-purple-800 justify-between gap-4 p-4 rounded-lg cursor-pointer border shadow-md hover:shadow-lg  hover:bg-purple-500 hover:text-white transition-colors ${
+                    className={`w-full flex items-center text-purple-800 justify-between gap-4 p-4 rounded-lg cursor-pointer border shadow-md hover:shadow-lg  hover:bg-purple-500 hover:text-white transition-colors ${
                       convertType === option.value
                         ? "bg-purple-800 text-white"
                         : "bg-white"
@@ -50,7 +51,9 @@ export function Transform() {
                         {option.icons.label1}
                       </span>
                     </div>
-                    <ArrowRight size={20} />
+                    <div className="flex items-center justify-center flex-1 ">
+                      <ArrowRight size={20} />
+                    </div>
                     <div className="flex flex-col items-center">
                       <Icon2 size={32} />
                       <span className="text-sm font-medium">
