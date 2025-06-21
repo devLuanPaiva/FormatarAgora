@@ -55,7 +55,7 @@ export const FileUpload = ({
   });
 
   return (
-    <div className="w-full" {...getRootProps()}>
+    <div className="w-fit border-2 border-dashed border-purple-200 rounded" {...getRootProps()}>
       <motion.div
         onClick={handleClick}
         whileHover="animate"
@@ -70,10 +70,10 @@ export const FileUpload = ({
         />
 
         <div className="flex flex-col items-center justify-center">
-          <p className="relative z-20 font-sans font-bold text-xl md:text-2xl text-zinc-200 dark:text-neutral-300 ">
+          <p className="relative z-20 font-sans font-bold text-xl md:text-2xl text-purple-800 ">
             Upload de Arquivos
           </p>
-          <p className="relative z-20 font-sans font-normal text-zinc-400 dark:text-neutral-400 text-base mt-2">
+          <p className="relative z-20 font-sans font-normal text-zinc-400 text-base mt-2">
             Arraste e solte arquivos ou clique para selecionar
           </p>
           <div className="relative w-full mt-10 max-w-xl mx-auto">
@@ -111,7 +111,7 @@ export const FileUpload = ({
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       layout
-                      className="px-1 py-0.5 rounded-md bg-gray-100 dark:bg-neutral-800 "
+                      className="px-2 py-1.5 rounded-md bg-purple-100 text-purple-800 "
                     >
                       {file.type}
                     </motion.p>
@@ -159,7 +159,7 @@ export const FileUpload = ({
             {!files.length && (
               <motion.div
                 variants={secondaryVariant}
-                className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md"
+                className="absolute opacity-0 border border-dashed border-purple-800 inset-0 z-30 bg-transparent flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md"
               ></motion.div>
             )}
           </div>

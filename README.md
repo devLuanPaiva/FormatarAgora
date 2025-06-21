@@ -1,6 +1,10 @@
 # Formatar agora
 
 <div align="center">
+    <img src="https://www.traveladvisor.site/logoFull.png" width="350px">
+</div>
+
+<div align="center">
   <img src="https://img.shields.io/badge/next.js-%23000000.svg?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
   <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React" />
   <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
@@ -27,68 +31,70 @@
 ---
 
 ## 🔄 Conversões disponíveis
-
-<table style="width:100%; border-collapse: collapse; text-align: left;">
-  <thead>
-    <tr style="background-color: #f3f4f6;">
-      <th style="padding: 12px; border: 1px solid #d1d5db;">Origem</th>
-      <th style="padding: 12px; border: 1px solid #d1d5db;">Destino</th>
-      <th style="padding: 12px; border: 1px solid #d1d5db;">Descrição</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">JPEG</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Renderiza cada página como imagem</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">DOCX</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Converte PDF para documento editável</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">TXT</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Extrai texto simples de arquivos PDF</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Imagem</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Concatena imagens em um PDF</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Imagem</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Base64</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Codifica imagem como string base64</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Imagem</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">DOCX</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Insere imagem em documento Word</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Imagem</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">TXT (OCR)</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Usa OCR para extrair texto da imagem</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">TXT</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">DOCX</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Gera documento Word a partir de texto</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">TXT</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Gera um PDF a partir de texto plano</td>
-    </tr>
-    <tr>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">DOCX</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
-      <td style="padding: 12px; border: 1px solid #e5e7eb;">Converte documento Word para PDF</td>
-    </tr>
-  </tbody>
-</table>
+<div align="center">
+  
+  <table style="width:100%; border-collapse: collapse; text-align: left;" >
+    <thead>
+      <tr style="background-color: #f3f4f6;">
+        <th style="padding: 12px; border: 1px solid #d1d5db;">Origem</th>
+        <th style="padding: 12px; border: 1px solid #d1d5db;">Destino</th>
+        <th style="padding: 12px; border: 1px solid #d1d5db;">Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">JPEG</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Renderiza cada página como imagem</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">DOCX</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Converte PDF para documento editável</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">TXT</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Extrai texto simples de arquivos PDF</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Imagem</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Concatena imagens em um PDF</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Imagem</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Base64</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Codifica imagem como string base64</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Imagem</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">DOCX</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Insere imagem em documento Word</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Imagem</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">TXT (OCR)</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Usa OCR para extrair texto da imagem</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">TXT</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">DOCX</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Gera documento Word a partir de texto</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">TXT</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Gera um PDF a partir de texto plano</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">DOCX</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">PDF</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Converte documento Word para PDF</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 ---
 
