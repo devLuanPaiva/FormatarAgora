@@ -19,14 +19,14 @@ export function Transform() {
   const availableOptions = getOptionsForType(fileType);
 
   return (
-    <section className="max-w-screen flex flex-col gap-6 items-center justify-center p-6">
-      <div className="w-full md:w-[70%] flex items-center justify-center">
+    <section className="max-w-screen flex flex-col lg:flex-row gap-6 items-center lg:items-start justify-center p-6">
+      <div className="w-full lg:w-1/2 flex items-center justify-center">
         <FileUpload onChange={handleFileChange} />
       </div>
 
       {file && (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <section className="flex flex-col items-center w-full lg:w-1/2 xl:max-w-xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4 w-full">
             {availableOptions.length > 0 ? (
               availableOptions.map((option) => {
                 const Icon1 = option.icons.icon1;
@@ -73,7 +73,7 @@ export function Transform() {
           >
             Converter
           </button>
-        </>
+        </section >
       )}
     </section>
   );
